@@ -1,0 +1,25 @@
+target
+bin
+.classpath
+.settings
+.project
+*.iml
+*.ipr
+*.iws
+work
+nbactions.xml
+nb-configuration.xml
+release.properties
+pom.xml.releaseBackup
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# vim
+*.swp
+Session.vim
+/nbproject/
+
+# OS X folder attributes
+.DS_Store
+.ropeproject

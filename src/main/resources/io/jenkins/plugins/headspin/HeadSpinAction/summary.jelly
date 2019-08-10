@@ -1,0 +1,18 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+    xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+    xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+
+    <j:set var="deviceId" value="${it.deviceId}"/>
+
+    <t:summary icon="/plugin/demo/icons/remote-testing-icon.svg">
+
+    <b>HeadSpin Build Analysis</b>
+    <p>Build ID: ${it.buildId} </p>
+    <p>Device ID: ${deviceId} </p>
+    
+    <iframe src="https://ui-canary.headspin.io/miniremote/${deviceId}"  frameBorder="0" width="100%" style="height:30vh;"></iframe>
+
+
+    </t:summary>
+</j:jelly>

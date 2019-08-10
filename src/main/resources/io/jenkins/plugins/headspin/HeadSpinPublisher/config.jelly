@@ -1,0 +1,14 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+    <f:entry field="apiToken" title="${%apiToken}">
+        <c:select />
+    </f:entry>
+
+    <f:entry title="${%Package Name or App Id}" field="appId">
+        <f:textbox />
+    </f:entry>
+
+    <f:entry title="${%HeadSpin Tests}" field="devices">
+        <f:repeatableProperty field="devices" minimum="1" noAddButton="true" />
+    </f:entry>
+</j:jelly>
