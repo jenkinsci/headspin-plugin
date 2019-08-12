@@ -22,6 +22,7 @@
      -->
     </properties>
     <name>HeadSpin Plugin</name>
+    <description>HeadSpin Mobile Performance Platform Plugin</description>
     <url>https://wiki.jenkins.io/display/JENKINS/HeadSpin+Mobile+Performance+Platform+Plugin</url>
     <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
     <licenses>
