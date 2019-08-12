@@ -48,6 +48,13 @@ Analysis page ("HeadSpin Report") gives useful information about performance of 
 ![Screenshot](docs/images/analysis.png)
 
 
+## Changelog
+
+### 1.0 (August 2019)
+
+Initial release
+
+
 ## Credits
 
 [![][headspin-wordmark]](https://headspin.io)
