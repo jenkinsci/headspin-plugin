@@ -60,7 +60,7 @@ Initial release
 
 [![][headspin-wordmark]](https://headspin.io)
 
-`jenkins-plugin` is maintained by [HeadSpin](https://headspin.io). HeadSpin is the next generation global platform for mobile app testing and monitoring.
+`jenkins-headspin-plugin` is maintained by [HeadSpin](https://headspin.io). HeadSpin is the next generation global platform for mobile app testing and monitoring.
 
 
 [headspin-wordmark]: docs/images/headspin-wordmark.png "HeadSpin"
