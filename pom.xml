@@ -24,11 +24,10 @@
     <name>HeadSpin Plugin</name>
     <description>HeadSpin Mobile Performance Platform Plugin</description>
     <url>https://wiki.jenkins.io/display/JENKINS/HeadSpin+Mobile+Performance+Platform+Plugin</url>
-    <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
     <licenses>
         <license>
-            <name>MIT License</name>
-            <url>https://opensource.org/licenses/MIT</url>
+            <name>Apache 2.0</name>
+            <url>https://opensource.org/licenses/Apache-2.0</url>
         </license>
     </licenses>
     <dependencies>

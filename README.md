@@ -1,6 +1,8 @@
-# Jenkins Integration
+# HeadSpin Jenkins Integration
 
 HeadSpin provides a plugin to Jenkins that does a deep integration of the HeadSpin session with the Jenkins concept of build. Using the HeadSpin plugin, each session is tagged with the build_id. This allows viewing all devices in use during a build, as well as end of build statistics based on the HeadSpin performance data. This document will explain how to configure and use the plugin.
+
+Usage of this plugin requires a HeadSpin API token. You must have a HeadSpin account to generate an API token. You can sign up for a new account at [https://ui.headspin.io/register?referral=jenkins](https://ui.headspin.io/register?referral=jenkins). Further configration of the plugin can be found under [https://ui.headspin.io/mysettings](https://ui.headspin.io/mysettings).
 
 
 ## Installation
@@ -29,8 +31,7 @@ The HeadSpin plugin is hosted at [https://plugins.jenkins.io/headspin](https://p
 8. Add HeadSpin Tests with selectors that choose a device and commands that run automation scripts.
 
    For example:
-   ![Screenshot](docs/settings.png)
-
+   ![Screenshot](docs/images/settings.png)
 9. Save.
 
 
@@ -39,10 +40,27 @@ The HeadSpin plugin is hosted at [https://plugins.jenkins.io/headspin](https://p
 ### Summary
 Summary page shows device views of running tests.
 
-![Screenshot](docs/summary.png)
+![Screenshot](docs/images/summary.png)
 
 
 ### Analysis
 Analysis page ("HeadSpin Report") gives useful information about performance of your app.
 
-![Screenshot](docs/analysis.png)
+![Screenshot](docs/images/analysis.png)
+
+
+## Changelog
+
+### 1.0 (August 2019)
+
+Initial release
+
+
+## Credits
+
+[![][headspin-wordmark]](https://headspin.io)
+
+`jenkins-plugin` is maintained by [HeadSpin](https://headspin.io). HeadSpin is the next generation global platform for mobile app testing and monitoring.
+
+
+[headspin-wordmark]: docs/images/headspin-wordmark.png "HeadSpin"
