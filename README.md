@@ -7,9 +7,11 @@ Usage of this plugin requires a HeadSpin API token. You must have a HeadSpin acc
 
 ## Installation
 
-The HeadSpin plugin is hosted at [https://plugins.jenkins.io/headspin](https://plugins.jenkins.io/headspin) as well as the Jenkins Maven reposity under `io.jenkins.plugins:headspin`. 
+The HeadSpin plugin is hosted at [https://plugins.jenkins.io/headspin](https://plugins.jenkins.io/headspin) as well as the Jenkins Maven reposity under `io.jenkins.plugins:headspin`.
 
-todo: instructions on how to install
+1. Go to `Manage Jenkins` > `Manage Plugins`.
+2. Search for `HeadSpin` on `Available` tab.
+3. Check the `Install` box and click the `Install without restart` or `Download now and install after restart` button.
 
 
 ## Set up
@@ -30,7 +32,6 @@ todo: instructions on how to install
 
    For example:
    ![Screenshot](docs/images/settings.png)
-
 9. Save.
 
 
