@@ -5,6 +5,7 @@ import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.export.Exported;
+import org.kohsuke.stapler.verb.POST;
 
 import com.cloudbees.plugins.credentials.BaseCredentials;
 import com.cloudbees.plugins.credentials.CredentialsDescriptor;
@@ -139,7 +140,9 @@ public class HeadSpinCredentials extends BaseCredentials implements StandardCred
             super(clazz);
         }
 
+        @POST
         public final FormValidation doTestConnection(@QueryParameter("apiToken") String apiToken) throws IOException {
+            Jenkins.get().checkPermission(Jenkins.ADMINISTER);
             if (StringUtils.isBlank(apiToken)) {
                 return FormValidation.error("HeadSpin API Token is empty!");
             }

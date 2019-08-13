@@ -80,13 +80,13 @@ import com.google.gson.JsonArray;
 public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
 
     private HeadSpinCredentials apiTokenCredential;
-    private final String apiToken;
+    private final String apiTokenId;
     private final String appId;
     private List<HeadSpinDeviceSelector> devices;
 
     @DataBoundConstructor
-    public HeadSpinPublisher(String apiToken, String appId, List<HeadSpinDeviceSelector> devices) {
-        this.apiToken = apiToken;
+    public HeadSpinPublisher(String apiTokenId, String appId, List<HeadSpinDeviceSelector> devices) {
+        this.apiTokenId = apiTokenId;
         this.appId = appId;
         this.devices = devices;
     }
@@ -139,7 +139,7 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
         try {
             // Get HeadSpin API Token user set
-            apiTokenCredential = HeadSpinCredentials.getCredentials(run.getParent(), apiToken);
+            apiTokenCredential = HeadSpinCredentials.getCredentials(run.getParent(), apiTokenId);
             if(apiTokenCredential == null) {
                 listener.getLogger().println("Could not find HeadSpin API Token.");
                 return;   
@@ -306,9 +306,10 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
     }
 
     @Extension
+    @Symbol("headspin")
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
-        private static String apiToken;
+        private static String apiTokenId;
 
         public DescriptorImpl() {
             clazz.asSubclass(HeadSpinPublisher.class);
@@ -324,9 +325,7 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
             return Messages.HeadSpinPublisher_DescriptorImpl_DisplayName();
         }
 
-        public ListBoxModel doFillApiTokenItems(@AncestorInPath final Item context, @QueryParameter String apiToken) {
-            // StandardListBoxModel result = new StandardListBoxModel();
-
+        public ListBoxModel doFillApiTokenIdItems(@AncestorInPath final Item context) {
             if (context != null && !context.hasPermission(Item.CONFIGURE)) {
                 return new StandardListBoxModel();
             }
@@ -340,12 +339,12 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                         CredentialsMatchers.anyOf(CredentialsMatchers.instanceOf(HeadSpinCredentials.class)));
         }
 
-        public FormValidation doCheckApiToken(@AncestorInPath Item item, @QueryParameter String apiToken){
+        public FormValidation doCheckApiTokenId(@AncestorInPath Item item, @QueryParameter String apiTokenId){
             CredentialsMatcher credentialMatcher = null;
-            if(apiToken == null || apiToken.contentEquals("")) {
+            if(apiTokenId == null || apiTokenId.contentEquals("")) {
                 credentialMatcher = CredentialsMatchers.anyOf(CredentialsMatchers.instanceOf(HeadSpinCredentials.class));
             } else {
-                credentialMatcher = CredentialsMatchers.withId(apiToken);
+                credentialMatcher = CredentialsMatchers.withId(apiTokenId);
             }
             HeadSpinCredentials apiTokenCredential = CredentialsMatchers.firstOrNull(
                     CredentialsProvider.lookupCredentials(
@@ -367,11 +366,11 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
         }
 
         public String getApiToken() {
-            return apiToken;
+            return apiTokenId;
         }
 
-        public void setApiToken(String apiToken) {
-            this.apiToken = apiToken;
+        public void setApiToken(String apiTokenId) {
+            this.apiTokenId = apiTokenId;
         }
 
     }
