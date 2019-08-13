@@ -20,7 +20,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.export.Exported;
-
+import org.kohsuke.stapler.verb.POST;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -339,7 +339,9 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                         CredentialsMatchers.anyOf(CredentialsMatchers.instanceOf(HeadSpinCredentials.class)));
         }
 
+        @POST
         public FormValidation doCheckApiTokenId(@AncestorInPath Item item, @QueryParameter String apiTokenId){
+            Jenkins.get().checkPermission(Jenkins.ADMINISTER);
             CredentialsMatcher credentialMatcher = null;
             if(apiTokenId == null || apiTokenId.contentEquals("")) {
                 credentialMatcher = CredentialsMatchers.anyOf(CredentialsMatchers.instanceOf(HeadSpinCredentials.class));
