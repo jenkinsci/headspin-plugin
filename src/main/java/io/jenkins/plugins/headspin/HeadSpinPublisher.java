@@ -144,7 +144,6 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                 listener.getLogger().println("Could not find HeadSpin API Token.");
                 return;   
             }
-            listener.getLogger().println(apiTokenCredential.getDecryptedApiToken());
             String token = apiTokenCredential.getDecryptedApiToken();
             
             // create Jenkins build id
