@@ -114,25 +114,25 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
     }
     
     public static String getHeadSpinDevices(String headspinApiToken) {
-    	CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpClient httpclient = HttpClients.createDefault();
         String url = String.format("https://%s@api-canary.headspin.io/v0/devices", headspinApiToken);
         HttpGet httpget = new HttpGet(url);
         try {
-			CloseableHttpResponse response = httpclient.execute(httpget);
-			String res = EntityUtils.toString(response.getEntity());
-			JsonObject jsonResponse = new JsonParser().parse(res).getAsJsonObject();
-			if(jsonResponse.has("devices")){
-				return jsonResponse.get("devices").getAsJsonArray().toString();
-        	} else {
-        		return "[]";
-        	}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-			return "[]";
-		} catch (IOException e) {
-			e.printStackTrace();
-			return "[]";
-		}
+            CloseableHttpResponse response = httpclient.execute(httpget);
+            String res = EntityUtils.toString(response.getEntity());
+            JsonObject jsonResponse = new JsonParser().parse(res).getAsJsonObject();
+            if(jsonResponse.has("devices")){
+                return jsonResponse.get("devices").getAsJsonArray().toString();
+            } else {
+                return "[]";
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+            return "[]";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "[]";
+        }
     }
 
     @Override
@@ -163,29 +163,29 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
             Map<String, HeadSpinAction> runningActions = new HashMap<String, HeadSpinAction>();
             
             if(run.getArtifacts().size() <= 0) {
-            	listener.getLogger().println("Could not find app file.");
+                listener.getLogger().println("Could not find app file.");
                 run.setResult(hudson.model.Result.FAILURE);
                 return;
             }
             String appPath = run.getArtifactManager().root().toURI().getPath() + run.getArtifacts().get(0).relativePath;
             
             for(HeadSpinDeviceSelector test: devices) {
-            	Map<String, String> deviceSelectorMap = new HashMap<String, String>();
-            	if(test.getCarrier() != null && !test.getCarrier().equals(""))
-            		deviceSelectorMap.put("carrier", test.getCarrier());
-            	if(test.getDevice() != null && !test.getDevice().equals(""))
-            		deviceSelectorMap.put("model", test.getDevice());
-            	if(test.getLocation() != null && !test.getLocation().equals("")) {
-            		String[] geo = test.getLocation().split(",");
-            		if(geo.length > 0)
-            			deviceSelectorMap.put("city", geo[0].trim());
-            		if(geo.length > 1)
-            			deviceSelectorMap.put("country", geo[1].trim());
-            	}
-            	String deviceSelector = new Gson().toJson(deviceSelectorMap);
-            	listener.getLogger().println(deviceSelector);
-            	
-            	// lock device
+                Map<String, String> deviceSelectorMap = new HashMap<String, String>();
+                if(test.getCarrier() != null && !test.getCarrier().equals(""))
+                    deviceSelectorMap.put("carrier", test.getCarrier());
+                if(test.getDevice() != null && !test.getDevice().equals(""))
+                    deviceSelectorMap.put("model", test.getDevice());
+                if(test.getLocation() != null && !test.getLocation().equals("")) {
+                    String[] geo = test.getLocation().split(",");
+                    if(geo.length > 0)
+                        deviceSelectorMap.put("city", geo[0].trim());
+                    if(geo.length > 1)
+                        deviceSelectorMap.put("country", geo[1].trim());
+                }
+                String deviceSelector = new Gson().toJson(deviceSelectorMap);
+                listener.getLogger().println(deviceSelector);
+
+                // lock device
                 postingString = new StringEntity(deviceSelector);
                 url = String.format("https://%s@api-canary.headspin.io/v0/devices/lock", token);
                 httppost = new HttpPost(url);
@@ -195,45 +195,47 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                 res = EntityUtils.toString(response.getEntity());
                 listener.getLogger().println(res);
                 jsonResponse = new JsonParser().parse(res).getAsJsonObject();
-                
+
                 // if device is locked
                 if(jsonResponse.get("status_code").getAsInt() == 200){
                     String hostname = jsonResponse.get("hostname").getAsString();
                     String serial = jsonResponse.get("serial").getAsString();
-                    
+
                     // install
                     listener.getLogger().println(run.getArtifactManager().root().toURI().getPath());
                     listener.getLogger().println(run.getArtifacts().get(0).relativePath);
-                    
+
                     if(appPath.endsWith(".apk")) {
-                    	url = String.format("https://%s@api-canary.headspin.io/v0/adb/%s/install", token, serial);
-    	               
+                        url = String.format("https://%s@api-canary.headspin.io/v0/adb/%s/install", token, serial);
                     } else if (appPath.endsWith(".ipa")) {
-                    	url = String.format("https://%s@api-canary.headspin.io/v0/idevice/%s/installer/install", token, serial);
+                        url = String.format("https://%s@api-canary.headspin.io/v0/idevice/%s/installer/install", token, serial);
                     } else {
-                    	listener.getLogger().println("App is neither apk nor ipa");
-                    	run.setResult(hudson.model.Result.FAILURE);
-                    	return;
+                        listener.getLogger().println("App is neither apk nor ipa");
+                        run.setResult(hudson.model.Result.FAILURE);
+                        return;
                     }
 
-	                httppost = new HttpPost(url);
+                    httppost = new HttpPost(url);
                     FileEntity reqEntity = new FileEntity(new File(appPath));
-	                httppost.setEntity(reqEntity);
-	                response = httpclient.execute(httppost);
-	                res = EntityUtils.toString(response.getEntity());
-	                listener.getLogger().println(res);
-	  
-	                // unlock
-	                postingString = new StringEntity(deviceSelector);
-	                url = String.format("https://%s@api-canary.headspin.io/v0/devices/unlock", token);
-	                httppost = new HttpPost(url);
-	                httppost.addHeader("Content-Type", "application/json");
-	                httppost.setEntity(postingString);
-	                response = httpclient.execute(httppost);
-	                res = EntityUtils.toString(response.getEntity());
-	                listener.getLogger().println(res);
-	                
-	                // run scripts
+                    httppost.setEntity(reqEntity);
+                    response = httpclient.execute(httppost);
+                    res = EntityUtils.toString(response.getEntity());
+                    listener.getLogger().println(res);
+
+                    // unlock
+                    deviceSelectorMap = new HashMap<String, String>();
+                    deviceSelectorMap.put("serial", serial);
+                    deviceSelector = new Gson().toJson(deviceSelectorMap);
+                    postingString = new StringEntity(deviceSelector);
+                    url = String.format("https://%s@api-canary.headspin.io/v0/devices/unlock", token);
+                    httppost = new HttpPost(url);
+                    httppost.addHeader("Content-Type", "application/json");
+                    httppost.setEntity(postingString);
+                    response = httpclient.execute(httppost);
+                    res = EntityUtils.toString(response.getEntity());
+                    listener.getLogger().println(res);
+
+                    // run scripts
                     ProcessBuilder builder = new ProcessBuilder();
                     Map<String, String> env = builder.environment();
                     env.put("HSJENKINS_DEVICE_ID", serial);
@@ -248,15 +250,14 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                     HeadSpinAction action = new HeadSpinAction(buildId, serial);
                     run.addAction(action);
                     runningActions.put(serial, action);
-                    
                 }else{
                     String failedReason = jsonResponse.get("status").getAsString();
                     listener.getLogger().println(String.format("Locking %s Failed... %s", deviceSelector, failedReason));
                     run.setResult(hudson.model.Result.FAILURE);
                 }
-                
+
                 for(String serial: runningProcesses.keySet()) {
-	                int exitCode = runningProcesses.get(serial).waitFor();
+                    int exitCode = runningProcesses.get(serial).waitFor();
                     listener.getLogger().print("Exit Code:");
                     listener.getLogger().println(exitCode);
 
@@ -266,17 +267,17 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                     } else {
                         runningActions.get(serial).setResult("Success");
                     }
-	
-	                // uninstall
-	                if(appPath.endsWith(".apk")) {
-	                	url = String.format("https://%s@api-canary.headspin.io/v0/adb/%s/uninstall?package=%s", token, serial, appId);
-	                } else if (appPath.endsWith(".ipa")) {
-	                	url = String.format("https://%s@api-canary.headspin.io/v0/idevice/%s/installer/uninstall?appid=%s", token, serial, appId);
-	                }
-	                httppost = new HttpPost(url);
-	                response = httpclient.execute(httppost);
-	                res = EntityUtils.toString(response.getEntity());
-	                listener.getLogger().println(res);
+
+                    // uninstall
+                    if(appPath.endsWith(".apk")) {
+                        url = String.format("https://%s@api-canary.headspin.io/v0/adb/%s/uninstall?package=%s", token, serial, appId);
+                    } else if (appPath.endsWith(".ipa")) {
+                        url = String.format("https://%s@api-canary.headspin.io/v0/idevice/%s/installer/uninstall?appid=%s", token, serial, appId);
+                    }
+                    httppost = new HttpPost(url);
+                    response = httpclient.execute(httppost);
+                    res = EntityUtils.toString(response.getEntity());
+                    listener.getLogger().println(res);
                 }
             }
 
@@ -296,7 +297,7 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
             this.inputStream = inputStream;
             this.consumer = consumer;
         }
-     
+
         @Override
         public void run() {
             new BufferedReader(new InputStreamReader(inputStream)).lines()
@@ -331,38 +332,38 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
             }
 
             return new StandardListBoxModel()
-            	.includeMatchingAs(
-            			ACL.SYSTEM, 
-            			context, 
-            			HeadSpinCredentials.class, 
-            			new ArrayList<DomainRequirement>(), 
-            			CredentialsMatchers.anyOf(CredentialsMatchers.instanceOf(HeadSpinCredentials.class)));
+                .includeMatchingAs(
+                        ACL.SYSTEM,
+                        context,
+                        HeadSpinCredentials.class,
+                        new ArrayList<DomainRequirement>(),
+                        CredentialsMatchers.anyOf(CredentialsMatchers.instanceOf(HeadSpinCredentials.class)));
         }
 
         public FormValidation doCheckApiToken(@AncestorInPath Item item, @QueryParameter String apiToken){
-        	CredentialsMatcher credentialMatcher = null;
-        	if(apiToken == null || apiToken.contentEquals("")) {
-        		credentialMatcher = CredentialsMatchers.anyOf(CredentialsMatchers.instanceOf(HeadSpinCredentials.class));
-        	} else {
-        		credentialMatcher = CredentialsMatchers.withId(apiToken);
-        	}
-        	HeadSpinCredentials apiTokenCredential = CredentialsMatchers.firstOrNull(
-        			CredentialsProvider.lookupCredentials(
-        					HeadSpinCredentials.class, item ,ACL.SYSTEM, new ArrayList<DomainRequirement>()
-        			), credentialMatcher
-        	);
-            if(apiTokenCredential == null) {
-            	return FormValidation.error("Could not find HeadSpin API Token.");   
+            CredentialsMatcher credentialMatcher = null;
+            if(apiToken == null || apiToken.contentEquals("")) {
+                credentialMatcher = CredentialsMatchers.anyOf(CredentialsMatchers.instanceOf(HeadSpinCredentials.class));
+            } else {
+                credentialMatcher = CredentialsMatchers.withId(apiToken);
             }
-            
+            HeadSpinCredentials apiTokenCredential = CredentialsMatchers.firstOrNull(
+                    CredentialsProvider.lookupCredentials(
+                            HeadSpinCredentials.class, item ,ACL.SYSTEM, new ArrayList<DomainRequirement>()
+                    ), credentialMatcher
+            );
+            if(apiTokenCredential == null) {
+                return FormValidation.error("Could not find HeadSpin API Token.");
+            }
+
             String headspinApiToken = apiTokenCredential.getDecryptedApiToken();
             HeadSpinDeviceSelector.setDevices(getHeadSpinDevices(headspinApiToken));
             
             return FormValidation.ok();
         }
-        
+
         public FormValidation doCheckDevices(@AncestorInPath Item item, @QueryParameter String apiToken) {
-        	return FormValidation.ok();
+            return FormValidation.ok();
         }
 
         public String getApiToken() {

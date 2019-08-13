@@ -36,7 +36,7 @@ public class HeadSpinAction implements RunAction2 {
 
     @Override
     public String getIconFileName() {
-        return "/plugin/demo/icons/headspin-logo-3-96.png"; 
+        return "/plugin/headspin/icons/headspin-logo-3-96.png";
     }
 
     @Override

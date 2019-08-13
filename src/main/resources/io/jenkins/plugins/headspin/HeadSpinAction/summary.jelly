@@ -5,13 +5,19 @@
 
     <j:set var="deviceId" value="${it.deviceId}"/>
 
-    <t:summary icon="/plugin/demo/icons/remote-testing-icon.svg">
+    <t:summary icon="/plugin/headspin/icons/remote-testing-icon.svg">
 
     <b>HeadSpin Build Analysis</b>
     <p>Build ID: ${it.buildId} </p>
     <p>Device ID: ${deviceId} </p>
     
-    <iframe src="https://ui-canary.headspin.io/miniremote/${deviceId}"  frameBorder="0" width="100%" style="height:30vh;"></iframe>
+    <j:if test="${it.result.indexOf('In Process...') != -1}">
+        <iframe src="https://ui-canary.headspin.io/miniremote/${deviceId}"  frameBorder="0" width="100%" style="height:30vh;"></iframe>
+    </j:if>
+
+    <j:if test="${it.result.indexOf('In Process...') == -1}">
+        <p>Test Result: ${it.result} </p>
+    </j:if>
 
 
     </t:summary>
