@@ -159,6 +159,7 @@
                 <configuration>
                 <!-- JENKINS-50520: since we need a custom version of Guava -->
                     <maskClasses>com.google.common.</maskClasses>
+                    <minimumJavaVersion/>
                 </configuration>
             </plugin>
         </plugins>
