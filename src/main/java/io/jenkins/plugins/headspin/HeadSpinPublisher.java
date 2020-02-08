@@ -70,6 +70,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
@@ -241,22 +242,28 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                     env.put("HSJENKINS_BUILD_ID", buildId);
                     env.put("HSJENKINS_DEVICE_URL", String.format("https://appium-canary.headspin.io/v0/%s/wd/hub", token));
                     env.put("HSJENKINS_PACKAGE_NAME", appId);
-                    builder.command(test.getTestShellCommand().split(" "));
-                    Process process = builder.start();
-                    StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), listener.getLogger()::println);
-                    Executors.newSingleThreadExecutor().submit(streamGobbler);
-                    runningProcesses.put(serial, process);
-                    HeadSpinAction action = new HeadSpinAction(buildId, serial);
-                    run.addAction(action);
-                    runningActions.put(serial, action);
+                    String command = test.getTestShellCommand();
+                    if(command != null) {
+                        builder.command(command.split(" "));
+                        Process process = builder.start();
+                        StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), listener.getLogger()::println);
+                        Executors.newSingleThreadExecutor().submit(streamGobbler);
+                        runningProcesses.put(serial, process);
+                        HeadSpinAction action = new HeadSpinAction(buildId, serial);
+                        run.addAction(action);
+                        runningActions.put(serial, action);
+                    } else {
+                        throw new Exception("Command cannot be empty");
+                    }
                 }else{
                     String failedReason = jsonResponse.get("status").getAsString();
                     listener.getLogger().println(String.format("Locking %s Failed... %s", deviceSelector, failedReason));
                     run.setResult(hudson.model.Result.FAILURE);
                 }
 
-                for(String serial: runningProcesses.keySet()) {
-                    int exitCode = runningProcesses.get(serial).waitFor();
+                for(Map.Entry<String, Process> entry: runningProcesses.entrySet()) {
+                    String serial = entry.getKey();
+                    int exitCode = entry.getValue().waitFor();
                     listener.getLogger().print("Exit Code:");
                     listener.getLogger().println(exitCode);
 
@@ -281,7 +288,8 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
             }
 
             return;
-
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             run.setResult(hudson.model.Result.FAILURE);
             e.printStackTrace(listener.getLogger());
@@ -299,7 +307,7 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
 
         @Override
         public void run() {
-            new BufferedReader(new InputStreamReader(inputStream)).lines()
+            new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines()
               .forEach(consumer);
         }
     }
@@ -308,7 +316,7 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
     @Symbol("headspin")
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
-        private static String apiTokenId;
+        private String apiTokenId;
 
         public DescriptorImpl() {
             clazz.asSubclass(HeadSpinPublisher.class);

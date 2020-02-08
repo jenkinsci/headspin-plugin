@@ -162,6 +162,8 @@ public class HeadSpinCredentials extends BaseCredentials implements StandardCred
                 } finally{
                     response.close();
                 }
+            } catch (RuntimeException e) {
+                throw e;
             } catch(Exception e){
                 return FormValidation.error("Unstable Connection.");
             } finally {
