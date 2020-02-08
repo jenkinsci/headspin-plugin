@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>headspin</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
@@ -159,7 +159,7 @@
                 <configuration>
                 <!-- JENKINS-50520: since we need a custom version of Guava -->
                     <maskClasses>com.google.common.</maskClasses>
-                    <minimumJavaVersion/>
+                    <minimumJavaVersion />
                 </configuration>
             </plugin>
         </plugins>
