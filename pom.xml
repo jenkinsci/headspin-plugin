@@ -23,7 +23,7 @@
     </properties>
     <name>HeadSpin Plugin</name>
     <description>HeadSpin Mobile Performance Platform Plugin</description>
-    <url>https://wiki.jenkins.io/display/JENKINS/HeadSpin+Mobile+Performance+Platform+Plugin</url>
+    <url>https://github.com/jenkinsci/headspin-plugin</url>
     <licenses>
         <license>
             <name>Apache 2.0</name>
