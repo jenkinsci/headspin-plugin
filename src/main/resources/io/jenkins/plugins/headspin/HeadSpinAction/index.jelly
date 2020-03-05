@@ -17,7 +17,7 @@
                 Test Result: ${it.result}
             </h1>
             <j:if test="${it.result.indexOf('In Process...') != -1}">
-                <iframe src="https://ui-canary.headspin.io/miniremote/${deviceId}" frameBorder="0" width="50%" style="height:30vh;"></iframe>
+                <iframe src="https://ui-dev.headspin.io/miniremote/${deviceId}" frameBorder="0" width="50%" style="height:30vh;"></iframe>
             </j:if>
         </l:main-panel>
     </l:layout>

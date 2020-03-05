@@ -116,7 +116,7 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
     
     public static String getHeadSpinDevices(String headspinApiToken) {
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        String url = String.format("https://%s@api-canary.headspin.io/v0/devices", headspinApiToken);
+        String url = String.format("https://%s@api-dev.headspin.io/v0/devices", headspinApiToken);
         HttpGet httpget = new HttpGet(url);
         try {
             CloseableHttpResponse response = httpclient.execute(httpget);
@@ -187,7 +187,7 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
 
                 // lock device
                 postingString = new StringEntity(deviceSelector);
-                url = String.format("https://%s@api-canary.headspin.io/v0/devices/lock", token);
+                url = String.format("https://%s@api-dev.headspin.io/v0/devices/lock", token);
                 httppost = new HttpPost(url);
                 httppost.addHeader("Content-Type", "application/json");
                 httppost.setEntity(postingString);
@@ -206,9 +206,9 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                     listener.getLogger().println(run.getArtifacts().get(0).relativePath);
 
                     if(appPath.endsWith(".apk")) {
-                        url = String.format("https://%s@api-canary.headspin.io/v0/adb/%s/install", token, serial);
+                        url = String.format("https://%s@api-dev.headspin.io/v0/adb/%s/install", token, serial);
                     } else if (appPath.endsWith(".ipa")) {
-                        url = String.format("https://%s@api-canary.headspin.io/v0/idevice/%s/installer/install", token, serial);
+                        url = String.format("https://%s@api-dev.headspin.io/v0/idevice/%s/installer/install", token, serial);
                     } else {
                         listener.getLogger().println("App is neither apk nor ipa");
                         run.setResult(hudson.model.Result.FAILURE);
@@ -227,7 +227,7 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                     deviceSelectorMap.put("serial", serial);
                     deviceSelector = new Gson().toJson(deviceSelectorMap);
                     postingString = new StringEntity(deviceSelector);
-                    url = String.format("https://%s@api-canary.headspin.io/v0/devices/unlock", token);
+                    url = String.format("https://%s@api-dev.headspin.io/v0/devices/unlock", token);
                     httppost = new HttpPost(url);
                     httppost.addHeader("Content-Type", "application/json");
                     httppost.setEntity(postingString);
@@ -240,7 +240,7 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
                     Map<String, String> env = builder.environment();
                     env.put("HSJENKINS_DEVICE_ID", serial);
                     env.put("HSJENKINS_BUILD_ID", buildId);
-                    env.put("HSJENKINS_DEVICE_URL", String.format("https://appium-canary.headspin.io/v0/%s/wd/hub", token));
+                    env.put("HSJENKINS_DEVICE_URL", String.format("https://appium-dev.headspin.io/v0/%s/wd/hub", token));
                     env.put("HSJENKINS_PACKAGE_NAME", appId);
                     String command = test.getTestShellCommand();
                     if(command != null) {
@@ -276,9 +276,9 @@ public class HeadSpinPublisher extends Recorder implements SimpleBuildStep {
 
                     // uninstall
                     if(appPath.endsWith(".apk")) {
-                        url = String.format("https://%s@api-canary.headspin.io/v0/adb/%s/uninstall?package=%s", token, serial, appId);
+                        url = String.format("https://%s@api-dev.headspin.io/v0/adb/%s/uninstall?package=%s", token, serial, appId);
                     } else if (appPath.endsWith(".ipa")) {
-                        url = String.format("https://%s@api-canary.headspin.io/v0/idevice/%s/installer/uninstall?appid=%s", token, serial, appId);
+                        url = String.format("https://%s@api-dev.headspin.io/v0/idevice/%s/installer/uninstall?appid=%s", token, serial, appId);
                     }
                     httppost = new HttpPost(url);
                     response = httpclient.execute(httppost);

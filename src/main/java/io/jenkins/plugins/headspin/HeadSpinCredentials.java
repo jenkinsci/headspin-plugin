@@ -149,7 +149,7 @@ public class HeadSpinCredentials extends BaseCredentials implements StandardCred
 
             CloseableHttpClient httpclient = HttpClients.createDefault();
             try{
-                String endpoint = String.format("https://%s@api-canary.headspin.io/v0/devices", apiToken);
+                String endpoint = String.format("https://%s@api-dev.headspin.io/v0/devices", apiToken);
                 HttpGet httpget = new HttpGet(endpoint);
                 CloseableHttpResponse response = httpclient.execute(httpget);
                 try{

@@ -12,7 +12,7 @@
     <p>Device ID: ${deviceId} </p>
     
     <j:if test="${it.result.indexOf('In Process...') != -1}">
-        <iframe src="https://ui-canary.headspin.io/miniremote/${deviceId}"  frameBorder="0" width="100%" style="height:30vh;"></iframe>
+        <iframe src="https://ui-dev.headspin.io/miniremote/${deviceId}"  frameBorder="0" width="100%" style="height:30vh;"></iframe>
     </j:if>
 
     <j:if test="${it.result.indexOf('In Process...') == -1}">
