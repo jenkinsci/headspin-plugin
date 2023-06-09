@@ -1,3 +1,8 @@
+# No Longer Supported
+
+This plugin is no longer supported and maintained by HeadSpin.
+
+
 # HeadSpin Jenkins Integration
 
 HeadSpin provides a plugin to Jenkins that does a deep integration of the HeadSpin session with the Jenkins concept of build. Using the HeadSpin plugin, each session is tagged with the build_id. This allows viewing all devices in use during a build, as well as end of build statistics based on the HeadSpin performance data. This document will explain how to configure and use the plugin.
